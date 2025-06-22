@@ -98,6 +98,29 @@ class Douyin:
                 self.video = ""
             else:
                 self.video = video_url.replace("playwm", "play")
+            
+            # 获取视频封面图
+            cover_data = get_video_data.get("cover", {})
+            if cover_data:
+                cover_url = cover_data.get("url_list", [])[0] if cover_data else ""
+                if cover_url:
+                    self.image_list.append(cover_url)
+            
+            # 如果没有封面，尝试获取原始封面
+            if not self.image_list:
+                origin_cover = get_video_data.get("origin_cover", {})
+                if origin_cover:
+                    origin_cover_url = origin_cover.get("url_list", [])[0] if origin_cover else ""
+                    if origin_cover_url:
+                        self.image_list.append(origin_cover_url)
+                        
+            # 尝试从动态封面获取
+            if not self.image_list:
+                dynamic_cover = get_video_data.get("dynamic_cover", {})
+                if dynamic_cover:
+                    dynamic_cover_url = dynamic_cover.get("url_list", [])[0] if dynamic_cover else ""
+                    if dynamic_cover_url:
+                        self.image_list.append(dynamic_cover_url)
         except Exception as e:
             raise e
 
